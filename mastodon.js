@@ -58,7 +58,7 @@ publishStatus(status,  visibility='private',imgId=false, replyTo=false) {
         }
     })
     .then(result=>console.log('Everything went well', result))
-    .catch(error=>console.log('Oops:', error))
+    .catch(error=>console.log('Oops, post error:', error))
 }
 async uploadMedia(file, link) {
     const extension = path.extname(file)
@@ -82,18 +82,23 @@ async uploadMedia(file, link) {
         "An alien pretending to be a llama",
         "Llama pretending to be a llama"
     ]
+    const newFile = await fs.createReadStream(file);
     formData.set('file', {
         name: `image${extension}`,
         [Symbol.toStringTag]: 'File',
-        stream: () => fs.createReadStream(file) 
+        stream: () => newFile,
       })
     formData.append('description', descriptions[Math.floor(Math.random() * (descriptions.length - 1))])
-    fetch(`https://${this.baseUrl}/api/v2/media/`, {
+    const newResponse = new Response(formData)
+    const blob = await newResponse.blob()
+    const type = newResponse.headers.get('content-type')
+    fetch(`https://${this.baseUrl}/api/v2/media/?` + this.params, {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer ' + this.#token
+            'content-type': type,
+            'content-length': blob.size
         },
-        body:formData
+        body:blob
     }).then((res)=>{
         if(res.ok) {
            return res.json()
@@ -103,7 +108,7 @@ async uploadMedia(file, link) {
     })
     .then(result=>this.publishStatus(link,'public', result.id))
     .then(res=>console.log('Everything went well'))
-    .catch(error=>console.log('Oops:', error))
+    .catch(error=>console.log('Oops, upload error:', error))
 }
 }
 module.exports = Mastodon;
