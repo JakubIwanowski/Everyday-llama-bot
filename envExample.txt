@@ -1,0 +1,2 @@
+PIXABAY_API_KEY="Pixabay key"
+MASTODON_TOKEN="Mastodon token"
