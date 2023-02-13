@@ -21,9 +21,6 @@ ws.on('close', function close() {
   ws.on('open', function open() {
     console.log('connected');
   });
-ws.addEventListener('message', (data)=> {
-    
-})
 ws.on('message', function message(data) {   
     const str = data.toString()
     const stream = JSON.parse(str);
@@ -32,12 +29,12 @@ ws.on('message', function message(data) {
         const acct = payload?.account?.acct;
         const replyId = payload?.status?.id
         const reply = `@${acct} Nose boop!`
-        self.publishStatus(reply,'unlisted',replyId);
+        self.publishStatus(reply,'unlisted',false, replyId);
     }
   
   });
 }
-publishStatus(status,  visibility='private',imgId=false, replyTo=false) {
+publishStatus(status,  visibility=false,imgId=false, replyTo=false) {
     const formData = new FormData();
     formData.append('status',status);
     formData.append('visibility',visibility)
