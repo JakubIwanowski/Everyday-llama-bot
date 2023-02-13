@@ -2,8 +2,6 @@ require('dotenv').config()
 const { getFileName } = require("./utilities");
 const Mastodon = require('./mastodon');
 const PixaBay = require('./photo');
-const path = require('path')
-const fs = require('fs');
 const cron = require('node-cron');
 console.log('Frolicking...');
 const directory = 'temp';
