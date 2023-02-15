@@ -2,7 +2,7 @@ require('dotenv').config()
 const { getFileName } = require("./utilities");
 const Mastodon = require('./mastodon');
 const PixaBay = require('./photo');
-const cron = require('node-cron');
+const Cron = require('croner');
 console.log('Frolicking...');
 const directory = 'temp';
 const paramsObject = {
@@ -29,9 +29,7 @@ const { pageURL } = await PixaBayClient.getPhoto(directory);
 const filePath = await getFileName(directory);
 MastodonClient.uploadMedia(filePath, pageURL)
 }
-MastodonClient.listen('user:notification')
-cron.schedule('0 8 * * *', () => {
-    init()
-  }, {
-    timezone: "Europe/Warsaw"
-  });
+MastodonClient.listen('user:notification');
+  const job = new Cron('0 8 * * *',{ timezone: 'Europe/Warsaw' },() => {
+    init();
+  })
