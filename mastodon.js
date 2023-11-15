@@ -105,10 +105,10 @@ class Mastodon {
       body: blob,
     })
       .then((res) => {
-        if (res.ok) {
+        if (res?.ok) {
           return res.json();
         } else {
-          throw new Error(res);
+          throw new Error("Upload error");
         }
       })
       .then((result) => this.publishStatus(link, "public", result.id))
@@ -117,4 +117,3 @@ class Mastodon {
   }
 }
 module.exports = Mastodon;
-
